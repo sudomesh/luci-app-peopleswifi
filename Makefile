@@ -15,6 +15,6 @@ endef
 
 ifneq ($(CONFIG_PACKAGE_luci-app-peopleswifi),)
 	PKG_SELECTED_MODULES+=applications/peopleswifi
-endif
+endef
 
 $(eval $(call BuildPackage,luci-app-peopleswifi))
