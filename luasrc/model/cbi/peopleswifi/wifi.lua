@@ -7,6 +7,7 @@ s:depends("ifname", "priv0")
 p = s:option(ListValue, "encryption", "Encryption") -- Creates an element list (select box)
 p:value("none", "none") -- Key and value pairs
 p:value("psk2", "psk2")
+p:value("psk", "psk")
 p.default = "psk2"
 
 s:option(Value, "key", "key", "Your Wifi Password")
