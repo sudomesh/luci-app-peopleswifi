@@ -16,6 +16,6 @@ $Id$
 module("luci.controller.peopleswifi.network", package.seeall)
 
 function index()
-	entry({"peopleswifi", "network"}, alias("peopleswifi", "network", "index"), _("Network"), 20).index = true
+	entry({"peopleswifi", "network"}, alias("peopleswifi", "network", "wifi"), _("Network"), 20).index = true
 	entry({"peopleswifi", "network", "wifi"}, cbi("peopleswifi/wifi", {autoapply=true}), _("Wifi Settings"), 10)
 end
