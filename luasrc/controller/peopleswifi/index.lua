@@ -22,34 +22,14 @@ function index()
 		root.index = true
 	end
   
-  hostname = "Peoples Wifi"
+  --hostname = "Peoples Wifi"
 
 	entry({"about"}, template("about"))
 	
 	local page = entry({"peopleswifi"}, alias("peopleswifi", "index"), _("Peoples Wifi"), 10)
 
-  page.sysauth = "root"
-  page.sysauth_authenticator = function()                            
-    local password = tostring(luci.sys.exec('less /usr/lib/lua/luci/peopleswifi/passwd'))
-
-    local auth = luci.http.getenv("HTTP_AUTHORIZATION")        
-    auth = auth and auth:match("[^ ]+[ ]+([%w+/=]+)")            
-    auth = auth and nixio.bin.b64decode(auth)                  
-                                                                       
-    if not auth or tostring(auth) ~= password then                  
-       
-      -- need auth info                                  
-      luci.http.status(401, "Unauthorized")              
-      luci.http.header("WWW-Authenticate", 'Basic realm="Secure Area"')
-      luci.http.header("Content-Type", "text/plain")     
-      luci.http.write("Login Required!")                 
-      return false                                       
-    else                                                               
-        -- user/pass ok                                             
-        return page.sysauth                                              
-    end         
-  end
-	
+  page.sysauth = "homeuser"
+  page.sysauth_authenticator = "htmlauth"
 	page.index = true
 	
 	entry({"peopleswifi", "index"}, form("peopleswifi/index"), _("General"), 1).ignoreindex = true
@@ -64,9 +44,8 @@ function action_logout()
 		dsp.context.urltoken.stok = nil
 	end
 
-  luci.http.status(401, "Unauthorized")              
-  luci.http.header("WWW-Authenticate", 'Basic realm="Secure Area"')
-  luci.http.header("Content-Type", "text/plain")     
-  luci.http.write("Login Required!")                 
- 
+	luci.http.header("Set-Cookie", "sysauth=; path=" .. dsp.build_url())
+	-- need auth info                                                
+    	luci.http.status(401, "Unauthorized")                                                           
+    	luci.http.redirect(luci.dispatcher.build_url())
 end
