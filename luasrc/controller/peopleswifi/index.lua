@@ -64,6 +64,9 @@ function action_logout()
 		dsp.context.urltoken.stok = nil
 	end
 
-	luci.http.header("Set-Cookie", "sysauth=; path=" .. dsp.build_url())
-	luci.http.redirect(luci.dispatcher.build_url())
+  luci.http.status(401, "Unauthorized")              
+  luci.http.header("WWW-Authenticate", 'Basic realm="Secure Area"')
+  luci.http.header("Content-Type", "text/plain")     
+  luci.http.write("Login Required!")                 
+ 
 end
