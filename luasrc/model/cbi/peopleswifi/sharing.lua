@@ -14,10 +14,14 @@ m = Map("batman-adv", translate("Sharing"), translate("Choose how much bandwith 
 s = m:section(NamedSection, "bat0", "mesh", "")
 s.addremove = false
 
-p = s:option(ListValue, "gw_mode", translate("Amount")) -- Creates an element list (select box)
-p:value("server 1mbit/256kbit", translate("1mbit down - 256kbit up")) -- Key and value pairs
-p:value("server 5mbit/1mbit", translate("5mbit down - 1mbit up")) -- Key and value pairs
+p = s:option(ListValue, "gw_mode", translate("Amount")) 
+p:value("server 1mbit/256kbit", translate("1mbit down - 256kbit up"))
+p:value("server 5mbit/1mbit", translate("5mbit down - 1mbit up"))
 p:value("server 10mbit/5mbit", translate("10mbit down - 5mbit up"))
+p:value("server 20mbit/10mbit", translate("20mbit down - 10mbit up"))
+p:value("server 30mbit/10mbit", translate("30mbit down - 10mbit up"))
+p:value("server 40mbit/20mbit", translate("40mbit down - 20mbit up"))
+p:value("server 1gbit/50mbit", translate("1gbit down - 50mbit up"))  -- Maybe a little ambitious?
 p:value("client", "No Sharing")
 
 p.default = "server 1mbit/256kbit"
