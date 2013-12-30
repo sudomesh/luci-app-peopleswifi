@@ -1,4 +1,4 @@
-m = Map("wireless", "Wireless") -- We want to edit the uci config file /etc/config/network
+m = Map("wireless", "Wireless") -- We want to edit the uci config file /etc/config/wireless
 
 s = m:section(TypedSection, "wifi-iface", "Wireless Interface") 
 s.addremove = false 

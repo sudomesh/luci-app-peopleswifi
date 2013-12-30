@@ -49,4 +49,4 @@ function m.on_commit(map)
 	end
 end
 
-return m, m2
+return m
