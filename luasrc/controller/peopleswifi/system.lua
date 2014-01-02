@@ -28,18 +28,18 @@ function action_reboot()
 	end
 end
 
-function action_passwd()                                                                                          
+function action_passwd()
 	local p1 = luci.http.formvalue("pwd1")                  
         local p2 = luci.http.formvalue("pwd2")                  
-        local stat = nil                                                                             
+        local stat = nil
                                                                         
         if p1 or p2 then                                         
-		if p1 == p2 then                                                  
-                        stat = luci.sys.user.setpasswd("homeuser", p1)                            
-                else                                                                                                                               
+             if p1 == p2 then                                                  
+                 stat = luci.sys.user.setpasswd("admin", p1)
+             else
 	                stat = 10                             
-                end                                                            
-        end                                                                            
+             end                                                            
+        end
 
-	luci.template.render("admin_system/passwd", {stat=stat})                        
+	luci.template.render("admin_system/passwd", {stat=stat})
 end

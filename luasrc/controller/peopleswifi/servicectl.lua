@@ -15,7 +15,7 @@ $Id: servicectl.lua 9558 2012-12-18 13:58:22Z jow $
 module("luci.controller.peopleswifi.servicectl", package.seeall)
 
 function index()
-	entry({"servicectl"}, alias("servicectl", "status")).sysauth = "homeuser"
+	entry({"servicectl"}, alias("servicectl", "status")).sysauth = "admin"
 	entry({"servicectl", "status"}, call("action_status")).leaf = true
 	entry({"servicectl", "restart"}, call("action_restart")).leaf = true
 end

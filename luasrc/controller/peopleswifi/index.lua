@@ -27,7 +27,7 @@ function index()
 	
 	local page = entry({"peopleswifi"}, alias("peopleswifi", "index"), _("Peoples Wifi"), 10)
 
-  page.sysauth = "homeuser"
+  page.sysauth = "admin"
   page.sysauth_authenticator = "htmlauth"
 	page.index = true
 	
