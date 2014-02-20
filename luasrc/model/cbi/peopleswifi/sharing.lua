@@ -9,96 +9,83 @@ function getConfType(conf,type)
   return ifce
 end
 
-m = Map("batman-adv", translate("Sharing"), translate("Choose how much bandwith to share")) -- We want to edit the uci config file /etc/config/batman-adv
+m = Map("tunneldigger", translate("Sharing"), translate("Choose how much bandwith to share")) -- We want to edit the uci config file /etc/config/batman-adv
 
-s = m:section(NamedSection, "bat0", "mesh", "")
+s = m:section(NamedSection, "main", "broker", "Download and upload bandwidth", "How fast will you allow users of peoplesopen.net to download and upload using your connection?")
 s.addremove = false
 
-p = s:option(ListValue, "gw_mode", translate("Amount")) 
-p:value("server 1mbit/256kbit", translate("1mbit down - 256kbit up"))
-p:value("server 5mbit/1mbit", translate("5mbit down - 1mbit up"))
-p:value("server 10mbit/5mbit", translate("10mbit down - 5mbit up"))
-p:value("server 20mbit/10mbit", translate("20mbit down - 10mbit up"))
-p:value("server 30mbit/10mbit", translate("30mbit down - 10mbit up"))
-p:value("server 40mbit/20mbit", translate("40mbit down - 20mbit up"))
-p:value("server 1gbit/50mbit", translate("1gbit down - 50mbit up"))  -- Maybe a little ambitious?
-p:value("client", "No Sharing")
+p = s:option(ListValue, "limit_bw_down", translate("Download bandwidth"))
+p:value("1024kbit", translate("1 megabit per second"))
+p:value("2048kbit", translate("2 megabit per second"))
+p:value("3072kbit", translate("3 megabit per second"))
+p:value("4096kbit", translate("4 megabit per second"))
+p:value("6144kbit", translate("6 megabit per second"))
+p:value("8192kbit", translate("8 megabit per second"))
+p:value("10240kbit", translate("10 megabit per second"))
+p:value("12288kbit", translate("12 megabit per second"))
+p:value("16384kbit", translate("16 megabit per second"))
+p:value("20480kbit", translate("20 megabit per second"))
+p:value("24576kbit", translate("24 megabit per second"))
+p:value("28672kbit", translate("28 megabit per second"))
+p:value("32768kbit", translate("32 megabit per second"))
+p:value("49152kbit", translate("48 megabit per second"))
+p:value("65536kbit", translate("64 megabit per second"))
+p:value("0", "No sharing")
 
-p.default = "server 1mbit/256kbit"
+p = s:option(ListValue, "limit_bw_up", translate("Upload bandwidth"))
+p:value("1024kbit", translate("1 megabit per second"))
+p:value("1024kbit", translate("1 megabit per second"))
+p:value("2048kbit", translate("2 megabit per second"))
+p:value("3072kbit", translate("3 megabit per second"))
+p:value("4096kbit", translate("4 megabit per second"))
+p:value("6144kbit", translate("6 megabit per second"))
+p:value("8192kbit", translate("8 megabit per second"))
+p:value("10240kbit", translate("10 megabit per second"))
+p:value("12288kbit", translate("12 megabit per second"))
+p:value("16384kbit", translate("16 megabit per second"))
+p:value("20480kbit", translate("20 megabit per second"))
+p:value("24576kbit", translate("24 megabit per second"))
+p:value("28672kbit", translate("28 megabit per second"))
+p:value("32768kbit", translate("32 megabit per second"))
+p:value("49152kbit", translate("48 megabit per second"))
+p:value("65536kbit", translate("64 megabit per second"))
+p:value("0", "No sharing")
 
 function s.cfgsections()
 	return { "_share" }
 end
 
-function split(pString, pPattern)                                  
-  local Table = {}                                
-  local fpat = "(.-)" .. pPattern                 
-  local last_end = 1                              
-  local s, e, cap = pString:find(fpat, 1)         
-  while s do                             
-    if s ~= 1 or cap ~= "" then                           
-      table.insert(Table,cap)         
-    end                                     
-    last_end = e+1                          
-    s, e, cap = pString:find(fpat, last_end)
-  end                                
-  if last_end <= #pString then       
-    cap = pString:sub(last_end)
-    table.insert(Table, cap)
-  end                                           
-  return Table                            
-end 
-
 function m.on_commit(self, map)
   
-  local up = 0
-  local upUnits = ""
-  local down = 0
-  local downUnits = ""
+  local batman_gw_mode = 'client'
   
   local formvalue = luci.http.formvaluetable('cbid')
-  local raw_val = formvalue['batman-adv.bat0.gw_mode']
 
-  if (raw_val == "client") then
-  -- Nothing to do I think
-  else
-    local split_val = split(raw_val, "%/")
+  local up_val = formvalue['tunneldigger.main.limit_bw_up']
+  local down_val = formvalue['tunneldigger.main.limit_bw_down']
 
-    up = split_val[2]
-    down = split_val[1]
-
-    upUnits = string.gsub(up, "%d", "")
-    downUnits = string.gsub(string.gsub(down, "%d", ""), "server ", "")
-
-    up = string.gsub(up, "%a", "")
-    down = string.gsub(down, "%a", "")
-
-    if (upUnits == "kbit") then 
-      up = up 
-    elseif (upUnits == "mbit") then
-      up = up * 1024
-    elseif (upUnits == "gbit") then
-      up = up * 1024 * 1024
-    end
-
-    if (downUnits == "kbit") then 
-      down = down 
-    elseif (upUnits == "mbit") then
-      down = down * 1024
-    elseif (upUnits == "gbit") then
-      down = down * 1024 * 1024
-    end
+  if(not string.find(up_val, "^%d+kbit$")) then
+    up_val = '0'
   end
-  
-  local ucibrokername = getConfType("tunneldigger", "broker")[0]['.name']
+
+  if(not string.find(down_val, "^%d+kbit$")) then
+    down_val = '0'
+  end
+
+  if not up_val or not down_val or (up_val == '') or (down_val == '') or (up_val == '0') or (down_val == '0') then
+    up_val = '0'
+    down_val = '0'
+  else
+    batman_gw_mode = "server "..down_val.."/"..up_val
+  end
+
 
   local ucicursor = uci.cursor()
+  ucicursor:set('batman-adv', 'bat0', 'gw_mode', batman_gw_mode)
+  ucicursor:commit('batman-adv')
 
-  ucicursor:set('tunneldigger', ucibrokername, 'limit_bw_down', down)
-  ucicursor:set('tunneldigger', ucibrokername, 'limit_bw_up', up)
-  ucicursor:commit('tunneldigger')
-
-  m.message = "Settings changed. Sharing  " .. down .. "kbit down and " .. up .. "kbit up"
+  m.message = "Settings changed. Sharing  " .. down_val .. " kbit/sec down and " .. up_val .. "kbit/sec up"
+  sys.call("/usr/sbin/batctl gw_mode "..batman_gw_mode)
   sys.call("/etc/init.d/tunneldigger restart")
 end
 
