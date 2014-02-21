@@ -84,7 +84,7 @@ function m.on_commit(self, map)
   ucicursor:set('batman-adv', 'bat0', 'gw_mode', batman_gw_mode)
   ucicursor:commit('batman-adv')
 
-  m.message = "Settings changed. Sharing  " .. down_val .. " kbit/sec down and " .. up_val .. "kbit/sec up"
+  m.message = "Settings changed. Sharing  " .. down_val .. "/sec down and " .. up_val .. "/sec up"
   sys.call("/usr/sbin/batctl gw_mode "..batman_gw_mode)
   sys.call("/etc/init.d/tunneldigger restart")
 end
