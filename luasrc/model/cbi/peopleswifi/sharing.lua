@@ -33,7 +33,7 @@ p:value("65536kbit", translate("64 megabit per second"))
 p:value("0", "No sharing")
 
 p = s:option(ListValue, "limit_bw_up", translate("Upload bandwidth"))
-p:value("1024kbit", translate("1 megabit per second"))
+p:value("512kbit", translate("0.5 megabit per second"))
 p:value("1024kbit", translate("1 megabit per second"))
 p:value("2048kbit", translate("2 megabit per second"))
 p:value("3072kbit", translate("3 megabit per second"))
