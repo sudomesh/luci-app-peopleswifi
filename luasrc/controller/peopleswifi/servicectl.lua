@@ -1,6 +1,7 @@
 --[[
 sudomesh LuCI extension
 
+Copyright 2010 Jo-Philipp Wich <xm@subsignal.org>
 Copyright 2013-2014 Max B <maxb.personal@gmail.com>
 
 Licensed under the Apache License, Version 2.0 (the "License");
